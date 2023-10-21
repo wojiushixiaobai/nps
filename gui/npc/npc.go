@@ -1,23 +1,24 @@
 package main
 
 import (
+	"fmt"
+	"io"
+	"os"
+	"path"
+	"runtime"
+	"strings"
+	"time"
+
 	"ehang.io/nps/client"
 	"ehang.io/nps/lib/common"
 	"ehang.io/nps/lib/daemon"
 	"ehang.io/nps/lib/version"
-	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 	"github.com/astaxie/beego/logs"
-	"io/ioutil"
-	"os"
-	"path"
-	"runtime"
-	"strings"
-	"time"
 )
 
 func main() {
@@ -42,7 +43,7 @@ var (
 )
 
 func WidgetScreen() fyne.CanvasObject {
-	return fyne.NewContainerWithLayout(layout.NewBorderLayout(nil, nil, nil, nil),
+	return container.New(layout.NewBorderLayout(nil, nil, nil, nil),
 		makeMainTab(),
 	)
 }
@@ -181,7 +182,7 @@ func loadConfig() (host, vkey, connType string) {
 		logs.Error(err)
 		return
 	}
-	data, err := ioutil.ReadAll(f)
+	data, err := io.ReadAll(f)
 	if err != nil {
 		logs.Error(err)
 		return
