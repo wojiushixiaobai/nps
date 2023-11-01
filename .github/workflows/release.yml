@@ -16,31 +16,17 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: '1.21.x'
-      - name: Create Build Directory
-        run: mkdir -p build
-      - name: Build NPS Binary
+      - name: Build Release
         uses: goreleaser/goreleaser-action@v4
         with:
           distribution: goreleaser
           version: latest
-          args: release --config nps-goreleaser.yaml --skip-publish --clean
-      - name: Make NPS Assets
-        run: |
-          mv dist/nps-v* build/
-          mv dist/checksums.txt build/
-      - name: Build NPC Binary
-        uses: goreleaser/goreleaser-action@v4
-        with:
-          distribution: goreleaser
-          version: latest
-          args: release --config npc-goreleaser.yaml --skip-publish --clean
-      - name: Make NPC Assets
-        run: |
-          mv dist/npc-v* build/
-          cat dist/checksums.txt >> build/checksums.txt
+          args: release --skip-publish --clean
       - name: Upload Assets
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            build/*
+            dist/*.tar.gz
+            dist/*.zip
+            dist/checksums.txt

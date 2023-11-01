@@ -11,7 +11,8 @@ before:
     - go mod tidy
 
 builds:
-  - main: ./cmd/nps/nps.go
+  - id: nps
+    main: ./cmd/nps/nps.go
     binary: nps
     flags:
       - -trimpath
@@ -27,8 +28,28 @@ builds:
     ignore:
       - goarch: 386
 
+  - id: npc
+    main: ./cmd/npc/npc.go
+    binary: npc
+    flags:
+      - -trimpath
+    ldflags:
+      - -w -s
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+      - freebsd
+    ignore:
+      - goarch: 386
+
 archives:
-  - format: tar.gz
+  - id: nps-arichives
+    builds:
+      - nps
+    format: tar.gz
     # this name template makes the OS and Arch compatible with the results of `uname`.
     name_template: "{{ .Binary }}-v{{ .Version }}-{{ .Os }}-{{ .Arch }}{{- if .Arm }}v{{ .Arm }}{{ end }}"
     wrap_in_directory: true
@@ -42,6 +63,22 @@ archives:
       - conf/server.pem
       - web/views
       - web/static
+    # use zip for windows archives
+    format_overrides:
+      - goos: windows
+        format: zip
+
+  - id: npc-archives
+    format: tar.gz
+    builds:
+      - npc
+    # this name template makes the OS and Arch compatible with the results of `uname`.
+    name_template: "{{ .Binary }}-v{{ .Version }}-{{ .Os }}-{{ .Arch }}{{- if .Arm }}v{{ .Arm }}{{ end }}"
+    wrap_in_directory: true
+    files:
+      - LICENSE
+      - conf/npc.conf
+      - conf/multi_account.conf
     # use zip for windows archives
     format_overrides:
       - goos: windows
