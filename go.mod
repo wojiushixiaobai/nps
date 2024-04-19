@@ -29,5 +29,5 @@ require (
 	github.com/ulikunitz/xz v0.5.11 // indirect
 	github.com/xtaci/kcp-go v5.4.20+incompatible
 	github.com/xtaci/lossyconn v0.0.0-20190602105132-8df528c0c9ae // indirect
-	golang.org/x/net v0.17.0
+	golang.org/x/net v0.23.0
 )
